@@ -12,7 +12,8 @@ Magnets are cylindrical N52, 0.375" diameter, 0.25" long, rated for 12 pounds of
 #### Variants
 * Rod diameters
   * Thinner rods are cheaper and more readily available (e.g., repurposing arrow shafts from Walmart)
-  * Thicker for wider cross-section / greater rigidity.  May not offer any real benefit for shorter arms - TBD
+  * Thicker rods provide a wider cross-section for greater rigidity.  May not offer any real benefit for shorter arms - TBD.
+  * Future test: Rigidity of thinner-walled large-diameter rods (e.g., 20mmx19mm), to cut weight further.
 * Rod lengths
   * Initially, will match FirePick Delta's length dimension between pivot points
 * Ball / socket diameter

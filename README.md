@@ -2,18 +2,27 @@
 
 #### Summary / Context
 
-Mechanical and electronic designs for a “delta” style process robot.  In particular, a “rotational delta”, which is driven by 3 pivoting upper arms.  (As opposed to a Rostock delta and similar designs where the “elbow” is mounted to a shuttle moving along a rail.)
+Mechanical and electronic designs for a “delta” style process robot.
+In particular, a “rotational delta”, which is driven by 3 pivoting upper arms.
+(As opposed to a Kossel or Rostock delta, and similar designs where each “elbow” is mounted to a shuttle moving along a rail.)
 
 ![Delta robot example](http://upload.wikimedia.org/wikipedia/commons/3/31/TOSY_Parallel_Robot.JPG)
 
-This repo contains my own modifications to the [FirePick Delta](http://delta.firepick.org) project.  As such, you are referred to the [FirePick repo](https://github.com/firepick-delta/firepick-delta) for the more complete project.
+This repo contains my own modifications to the [FirePick Delta](http://delta.firepick.org) project.
+As such, I refer you to the [FirePick repo](https://github.com/firepick-delta/firepick-delta) for the more complete project.
 
-My primary focus here is related to pick & place.  Use care when applying these mods to other use cases.
+My primary focus here is related to pick & place.
+Use care when applying these mods to other use cases.
 
-Code here is predominantly C++ and should be easily portable.  At the moment, I’m targeting the Raspberry Pi2 B platform for motor control, which is a major difference from the main project.  Among the key reasons are its dual-core processor (supporting 4 threads) and its raw clockspeed, both of which are important for super-granular path calculations.  It’s also an incredible value at $35 - we’ll see how much one board can take on.
+Code here is predominantly C++ and should be easily portable.
+At the moment, I’m targeting the Raspberry Pi2 B platform for motor control, which is a major difference from the main project.  Among the key reasons are its dual-core processor (supporting 4 threads) and its raw clockspeed, both of which are important for super-granular path calculations.
+It’s also an incredible value at $35 - we’ll see how much one board can take on.
 
+The primary issue with using RPi2 for motor control is that it lacks realtime features.
+However, it operates at 1GHz, so being able to signal a pulse at 20KHz with relatively low jitter would seem very achievable.
+A fallback option would be to use RPi2 for the floating-point calculations and feed a constant stream of micro-steps to a very cheap, small realtime AVR controller to handle the actual driver pulse output.
 
-#### Structure
+#### Repository Structure
 
 The following folders will appear as they have content committed:
 * Kinematics - Code for kinematic math, path calculations, and motor control
