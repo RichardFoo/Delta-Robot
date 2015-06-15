@@ -2,7 +2,8 @@
 
 This is the lower arm (aka shin) for a rotary delta design.
 Shaft is carbon fiber for rigidity and low mass.
-Ends are machined Delrin / acetal for smoothness and anti-wear.
+Ends are machined Delrin / acetal for smoothness, low friction, and lack of magnetic properties.
+
 Ball joints are magnetically coupled with magnets placed inside the rear of the end piece.
 The socket is milled with a 0.1mm spacing between the ball and magnet to prevent friction wear.
 Magnets are cylindrical N52, 0.375" diameter, 0.25" long, rated for 12 pounds of pull.
