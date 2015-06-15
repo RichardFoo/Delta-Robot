@@ -18,18 +18,18 @@ Code here is predominantly C++ and should be easily portable.
 At the moment, I’m targeting the Raspberry Pi2 B platform for motor control, which is a major difference from the main project.  Among the key reasons are its dual-core processor (supporting 4 threads) and its raw clockspeed, both of which are important for super-granular path calculations.
 It’s also an incredible value at $35 - we’ll see how much one board can take on.
 
-The primary issue with using RPi2 for motor control is that it lacks realtime features.
+The primary issue with using RPi2 for motor control is that its OS lacks realtime features.
 However, it operates at 1GHz, so being able to signal a pulse at 20KHz with relatively low jitter would seem very achievable.
 A fallback option would be to use RPi2 for the floating-point calculations and feed a constant stream of micro-steps to a very cheap, small realtime AVR controller to handle the actual driver pulse output.
 
 #### Repository Structure
 
 The following folders will appear as they have content committed:
-* Kinematics - Code for kinematic math, path calculations, and motor control
 * Control - Code that interfaces with the outside world - touchscreen, HTTP, etc.
-* Mechanical - 3D CAD designs, CNC G-code scripts, and parts images
-* Electronics - PCB designs, schematics, and Gerber files
 * Documentation - Reference docs
+* Electronics - PCB designs, schematics, and Gerber files
+* Kinematics - Code for kinematic math, path calculations, and motor control
+* Mechanical - 3D CAD designs, CNC G-code scripts, and parts images
 
 
 #### Licensing
