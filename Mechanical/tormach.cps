@@ -17,7 +17,7 @@ legal = "Copyright (C) 2012-2014 by Autodesk, Inc.";
 certificationLevel = 2;
 minimumRevision = 24000;
 
-extension = "TAP";
+extension = "tap";
 setCodePage("ascii");
 
 tolerance = spatial(0.002, MM);
@@ -36,13 +36,13 @@ allowedCircularPlanes = undefined; // allow any circular motion
 properties = {
   writeMachine: true, // write machine
   writeTools: true, // writes the tools
-  useG28: true, // disable to avoid G28 output
+  useG28: false, // disable to avoid G28 output
   useM6: true, // disable to avoid M6 output - preload is also disabled when M6 is disabled
   preloadTool: false, // preloads next tool on tool change if any
   showSequenceNumbers: true, // show sequence numbers
   sequenceNumberStart: 10, // first sequence number
   sequenceNumberIncrement: 10, // increment for sequence numbers
-  optionalStop: true, // optional stop
+  optionalStop: false, // optional stop
   separateWordsWithSpace: true, // specifies that the words should be separated with a white space
   useRadius: true, // specifies that arcs should be output using the radius (R word) instead of the I, J, and K words.
   dwellInSeconds: true // specifies the unit for dwelling: true:seconds and false:milliseconds.
@@ -377,7 +377,13 @@ function onSection() {
   var newWorkPlane = isFirstSection() ||
     !isSameDirection(getPreviousSection().getGlobalFinalToolAxis(), currentSection.getGlobalInitialToolAxis());
   if (insertToolCall || newWorkOffset || newWorkPlane) {
-    
+
+		//RDH - stop spindle and coolant before retracting the head
+    if (insertToolCall) {
+		onCommand(COMMAND_STOP_SPINDLE);
+		onCommand(COMMAND_COOLANT_OFF);
+  	}
+  
     if (properties.useG28) {
       // retract to safe plane
       retracted = true;
@@ -416,6 +422,12 @@ function onSection() {
       return;
     }
 
+		//RDH - Added M5 - turn off spindle before tool change move
+    writeBlock(mFormat.format(5));
+		//RDH - Added M9 - turn off coolant after spindle for cool-down
+    writeBlock(mFormat.format(9));
+		//RDH - Added because without G28 enabled M998 was having issues
+    writeBlock(gFormat.format(90));
     writeBlock(mFormat.format(998));
     if (properties.useM6) {
       writeBlock("T" + toolFormat.format(tool.number),
@@ -1000,17 +1012,28 @@ function onSectionEnd() {
 function onClose() {
   writeln("");
 
-  onCommand(COMMAND_COOLANT_OFF);
+	//RDH - Added M5 - turn off spindle before end of job
+  writeBlock(mFormat.format(5));
+	//RDH - Added M9 - turn off coolant after spindle for cool-down
+  writeBlock(mFormat.format(9));
 
   if (properties.useG28) {
     writeBlock(gFormat.format(28), gAbsIncModal.format(91), "Z" + xyzFormat.format(0)); // retract
     zOutput.reset();
   }
+	//RDH Added 19Jul2015
+  else {
+    writeBlock(gFormat.format(90));
+    writeBlock(gFormat.format(28), gAbsIncModal.format(91), "Z" + xyzFormat.format(0)); // retract head
+  }
+  writeBlock(gAbsIncModal.format(90), gFormat.format(53), "Y" + xyzFormat.format(0)); // move bed forward
 
   setWorkPlane(new Vector(0, 0, 0)); // reset working plane
 
   if (properties.useG28 && !machineConfiguration.hasHomePositionX() && !machineConfiguration.hasHomePositionY()) {
-    writeBlock(gFormat.format(28), gAbsIncModal.format(91), "X" + xyzFormat.format(0), "Y" + xyzFormat.format(0)); // return to home
+//    writeBlock(gFormat.format(28), gAbsIncModal.format(91), "X" + xyzFormat.format(0), "Y" + xyzFormat.format(0)); // return to home
+		//RDH - disable X homing - wastes time
+    writeBlock(gFormat.format(28), gAbsIncModal.format(91), "Y" + xyzFormat.format(0)); // return to Y home
   } else {
     var homeX;
     if (machineConfiguration.hasHomePositionX()) {
